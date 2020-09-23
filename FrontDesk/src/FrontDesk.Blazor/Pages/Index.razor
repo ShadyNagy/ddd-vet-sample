@@ -1,6 +1,4 @@
 ﻿@page "/"
-@using Telerik.Blazor.Components.Scheduler.Rendering.DayView
-@using Telerik.Blazor.Components.Scheduler.Rendering
 
 @renderTextBox()
 
@@ -52,8 +50,6 @@
         </TelerikComboBox>
     </label>
 </div>
-
-<DayTable ViewModel="@modal" Appointments="@AppointmentItems" TItem="AppointmentDto"></DayTable>
 
 <TelerikScheduler Data="@Appointments" @bind-Date="@StartDate" Height="600px" @bind-View="@CurrView"
                   OnEdit="@EditHandler" OnDelete="@DeleteAppointmentAsync"
