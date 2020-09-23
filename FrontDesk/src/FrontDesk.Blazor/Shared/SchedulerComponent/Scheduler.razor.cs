@@ -17,6 +17,8 @@ namespace FrontDesk.Blazor.Shared.SchedulerComponent
         IJSRuntime JSRuntime { get; set; }
 
         [Parameter]
+        public int Height { get; set; } = 750;
+        [Parameter]
         public RenderFragment ChildContent { get; set; }
         [Parameter]
         public RenderFragment<Resource> RenderFragmentResources { get; set; }
@@ -55,7 +57,7 @@ namespace FrontDesk.Blazor.Shared.SchedulerComponent
 
         private async Task CallJSMethod()
         {
-            await JSRuntime.InvokeVoidAsync("scheduler", StartDate, StartTime, EndTime, Appointments, Rooms, AppointmentTypes, Resources, Groups);            
+            await JSRuntime.InvokeVoidAsync("scheduler", StartDate, StartTime, EndTime, Appointments, Rooms, AppointmentTypes, Resources, Groups, Height);            
         }
 
         private async Task OpenEdit()

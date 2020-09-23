@@ -41,6 +41,8 @@
     </script>
 
     <script>
+        var editButtonId = '';
+
         function lowerCasefirst(string) {
             if (!string || string.length <= 0) {
                 return '';
@@ -87,7 +89,8 @@
             return result;
         }
 
-        function addListenerToFireEdit(editButtonId) {
+        function addListenerToFireEdit(id) {
+            editButtonId = id;
             let editButton = document.querySelector("#" + editButtonId);
             if (editButton) {
                 console.log("addListenerToFireEdit");
@@ -96,7 +99,7 @@
             }
         }
 
-        function scheduler(startDate, startTime, endDate, appointments, rooms, appointmentTypes, schedulerResources, schedulerGroups) {
+        function scheduler(startDate, startTime, endDate, appointments, rooms, appointmentTypes, schedulerResources, schedulerGroups, height) {
             var resources = [];
             var groups = [];
 
@@ -157,7 +160,7 @@
                 date: startDate,
                 startTime: startTime,
                 endTime: endDate,
-                height: 750,
+                height: height,
                 views: [
                     { type: "day", selected: true, allDaySlot: false, minorTickCount: 4 },
                     { type: "workWeek", allDaySlot: false, minorTickCount: 4 },
@@ -181,14 +184,19 @@
 
         function onEdit(e) {
             e.preventDefault();
-            document.getElementById("editFire").click();
+
+            let editButton = document.getElementById(editButtonId);
+            if (editButton) {
+                editButton.click();
+            }
+
+            console.log(e.event);
         }
 
         function refreshData() {
             var data = $("#scheduler").kendoScheduler.data;
             if (data) {
                 data.refresh();
-                //data.dataSource.read();
             }
             
         }

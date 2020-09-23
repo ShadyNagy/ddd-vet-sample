@@ -11,14 +11,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Telerik.Blazor;
 using Telerik.Blazor.Components;
-using Telerik.Blazor.Components.Scheduler;
-using Telerik.Blazor.Components.Scheduler.Models;
-using Telerik.Blazor.Components.Scheduler.ViewModels;
 
 namespace FrontDesk.Blazor.Pages
 {
     public partial class Index
-    {   
+    {        
         [Inject]
         AppointmentService AppointmentService { get; set; }
 
