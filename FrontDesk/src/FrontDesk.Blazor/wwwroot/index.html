@@ -143,30 +143,6 @@
                     }
                 }),
             });
-            var datasource = new kendo.data.SchedulerDataSource({
-                data: appointments,
-                schema: {
-                    model: {
-                        id: "appointmentId",
-                        fields: {
-                            appointmentId: { from: "appointmentId", type: "string" },
-                            title: { from: "title", defaultValue: "No title", validation: { required: true } },
-                            start: { type: "date", from: "start" },
-                            end: { type: "date", from: "end" },
-                            description: { from: "description" },
-                            roomId: { from: "roomId", nullable: true, type: "number" },
-                            doctorId: { from: "doctorId", nullable: true },
-                            clientId: { from: "clientId" },
-                            patientId: { from: "patientId" },
-                            patientName: { from: "patientName" },
-                            clientName: { from: "clientName" },
-                            isAllDay: { type: "boolean", from: "isAllDay" },
-                            isConflict: { type: "boolean", from: "isPotentiallyConflicting" },
-                            isConfirmed: { from: "isConfirmed" }
-                        }
-                    }
-                }
-            });
 
             var onDataBound = function (e) {
                 $("[data-is-conflicted=true]")
