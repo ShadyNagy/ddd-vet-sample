@@ -1,4 +1,10 @@
 ﻿@page "/"
+@using Telerik.Blazor.Components.Scheduler.Rendering.DayView
+@using Telerik.Blazor.Components.Scheduler.Rendering
+
+@renderTextBox()
+
+
 
 <h1>Appointments</h1>
 <div class="inline @((IsRoomSelected? "" : "error"))">
@@ -47,7 +53,9 @@
     </label>
 </div>
 
-<TelerikScheduler Data="@Appointments" @bind-Date="@StartDate" Height="600px" @bind-View="@CurrView" 
+<DayTable ViewModel="@modal" Appointments="@AppointmentItems" TItem="AppointmentDto"></DayTable>
+
+<TelerikScheduler Data="@Appointments" @bind-Date="@StartDate" Height="600px" @bind-View="@CurrView"
                   OnEdit="@EditHandler" OnDelete="@DeleteAppointmentAsync"
                   AllowCreate="true" AllowDelete="true" AllowUpdate="true"
                   IdField="@(nameof(AppointmentDto.AppointmentId))"
@@ -56,6 +64,8 @@
                   TitleField="@(nameof(AppointmentDto.Title))"
                   DescriptionField="@(nameof(AppointmentDto.Description))"
                   IsAllDayField="@(nameof(AppointmentDto.IsAllDay))">
+
+
     <SchedulerResources>
         <SchedulerResource TextField="Name" ValueField="AppointmentTypeId" Field="AppointmentTypeId" Title="Appointment Type" Data="@AppointmentTypes" />
     </SchedulerResources>
@@ -77,4 +87,4 @@
         <AppointmentEditor Patient="Patient" ScheduleId="ScheduleId" RoomId="RoomId" Appointment="@CurrentAppointment" OnAppointmentChanged="@RefreshDataAsync" />
     </WindowContent>
 </TelerikWindow>
- 
+
