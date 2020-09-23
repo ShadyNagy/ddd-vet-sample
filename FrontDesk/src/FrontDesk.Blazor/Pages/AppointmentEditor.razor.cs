@@ -40,7 +40,7 @@ namespace FrontDesk.Blazor.Pages
         bool ShowErrorMessage { get; set; }
         string GetDuration => AppointmentTypes.FirstOrDefault(x => x.AppointmentTypeId == Appointment.AppointmentTypeId)?.Duration.ToString();
         private string Picture { get; set; }
-        private bool IsAdd => Appointment.AppointmentId == Guid.Empty;
+        private bool IsAdd => Appointment == null || Appointment.AppointmentId == Guid.Empty;
         private string Title
         {
             get

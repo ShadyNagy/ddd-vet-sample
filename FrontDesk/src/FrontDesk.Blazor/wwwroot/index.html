@@ -8,10 +8,11 @@
     <base href="/" />
     <script src="_content/Telerik.UI.for.Blazor.Trial/js/telerik-blazor.js" defer></script>
 
-    <link href="https://kendo.cdn.telerik.com/2020.3.915/styles/kendo.common.min.css" rel="stylesheet" />
-    <link href="https://kendo.cdn.telerik.com/2020.3.915/styles/kendo.default.min.css" rel="stylesheet" />
-    <script src="https://code.jquery.com/jquery-1.12.3.min.js"></script>
-    <script src="https://kendo.cdn.telerik.com/2020.3.915/js/kendo.all.min.js"></script>
+    <link href="css/kendo/kendo.common.min.css" rel="stylesheet" />
+    <link href="css/kendo/kendo.default.min.css" rel="stylesheet" />
+    <script src="js/kendo/jquery-1.12.3.min.js"></script>
+    <script src="js/kendo/kendo.all.min.js"></script>
+    <script src="js/kendo/kendo.timezones.min.js"></script>
 
     <link rel="stylesheet" href="_content/Telerik.UI.for.Blazor.Trial/css/kendo-theme-default/all.css" />
     <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet" />
@@ -37,6 +38,196 @@
 
         });
 
+    </script>
+
+    <script>
+        function lowerCasefirst(string) {
+            if (!string || string.length <= 0) {
+                return '';
+            }
+            return string.charAt(0).toLowerCase() + string.slice(1);
+        }
+
+        function createDataSourceResource(data, valueField, textField, colorField) {
+            var result = {};
+
+            if (data[lowerCasefirst(valueField)]) {
+                result['value'] = data[lowerCasefirst(valueField)];
+            }
+
+            if (data[lowerCasefirst(textField)]) {
+                result['text'] = data[lowerCasefirst(textField)];
+            }
+
+            if (data[lowerCasefirst(colorField)]) {
+                result[lowerCasefirst(colorField)] = data[lowerCasefirst(colorField)];
+            }
+
+
+            return result;
+        }
+
+        function createResource(schedulerResource) {
+            var result = {};
+            var dataSource = [];
+
+            for (var i = 0; i < schedulerResource['data'].length; i++) {
+                dataSource.push(createDataSourceResource(schedulerResource['data'][i], schedulerResource['valueField'], schedulerResource['textField'], schedulerResource['colorField']));
+            }
+
+            result['dataSource'] = dataSource;
+            result['name'] = schedulerResource['name'].toLowerCase();
+            result['field'] = lowerCasefirst(schedulerResource['field']);
+            result['title'] = schedulerResource['title'];
+
+            if (lowerCasefirst(schedulerResource['colorField'])) {
+                result['dataColorField'] = lowerCasefirst(schedulerResource['colorField']);
+            }            
+
+            return result;
+        }
+
+        function addListenerToFireEdit(editButtonId) {
+            let editButton = document.querySelector("#" + editButtonId);
+            if (editButton) {
+                console.log("addListenerToFireEdit");
+                editButton.addEventListener("click", (e) => {
+                });
+            }
+        }
+
+        function scheduler(startDate, startTime, endDate, appointments, rooms, appointmentTypes, schedulerResources, schedulerGroups) {
+            var resources = [];
+            var groups = [];
+
+            if (schedulerGroups) {
+                for (var i = 0; i < schedulerGroups.length; i++) {
+                    groups.push(schedulerGroups[i].toLowerCase());
+                }
+            }
+
+            if (schedulerResources) {
+                for (var i = 0; i < schedulerResources.length; i++) {
+                    resources.push(createResource(schedulerResources[i]));
+                }
+            }
+
+
+            console.log('resources', resources);
+            console.log('startDate', startDate);
+            console.log('startTime', startTime);
+            console.log('endDate', endDate);
+            console.log('appointments', appointments);
+            console.log('rooms', rooms);
+            console.log('appointmentTypes', appointmentTypes);
+
+            hardRefresh();
+            var viewModel = new kendo.observable({
+                schedulerData: new kendo.data.SchedulerDataSource({
+                    data: appointments,
+                    schema: {
+                        model: {
+                            id: "appointmentId",
+                            fields: {
+                                appointmentId: { from: "appointmentId", type: "string" },
+                                title: { from: "title", defaultValue: "No title", validation: { required: true } },
+                                start: { type: "date", from: "start" },
+                                end: { type: "date", from: "end" },
+                                description: { from: "description" },
+                                roomId: { from: "roomId", nullable: true, type: "number" },
+                                isAllDay: { type: "boolean", from: "isAllDay" },
+                                isConflict: { type: "boolean", from: "isPotentiallyConflicting" },
+                                isConfirmed: { from: "isConfirmed" }
+                            }
+                        }
+                    }
+                }),
+            });
+            var datasource = new kendo.data.SchedulerDataSource({
+                data: appointments,
+                schema: {
+                    model: {
+                        id: "appointmentId",
+                        fields: {
+                            appointmentId: { from: "appointmentId", type: "string" },
+                            title: { from: "title", defaultValue: "No title", validation: { required: true } },
+                            start: { type: "date", from: "start" },
+                            end: { type: "date", from: "end" },
+                            description: { from: "description" },
+                            roomId: { from: "roomId", nullable: true, type: "number" },
+                            doctorId: { from: "doctorId", nullable: true },
+                            clientId: { from: "clientId" },
+                            patientId: { from: "patientId" },
+                            patientName: { from: "patientName" },
+                            clientName: { from: "clientName" },
+                            isAllDay: { type: "boolean", from: "isAllDay" },
+                            isConflict: { type: "boolean", from: "isPotentiallyConflicting" },
+                            isConfirmed: { from: "isConfirmed" }
+                        }
+                    }
+                }
+            });
+
+            var onDataBound = function (e) {
+                $("[data-is-conflicted=true]")
+                    .parent()
+                    .addClass("conflicted-event");
+                $("[data-is-confirmed=true]")
+                    .parent()
+                    .addClass("confirmed-event");
+            };
+
+            $("#scheduler").kendoScheduler({
+                date: startDate,
+                startTime: startTime,
+                endTime: endDate,
+                height: 750,
+                views: [
+                    { type: "day", selected: true, allDaySlot: false, minorTickCount: 4 },
+                    { type: "workWeek", allDaySlot: false, minorTickCount: 4 },
+                    "agenda"
+                ],
+                workWeekEnd: 6,
+                timezone: "America/Detroit",  
+                dataSource: viewModel.schedulerData,
+                dataBound: onDataBound,
+                eventTemplate: kendo.template($("#event-template").html()),
+                footer: false,
+                group: {
+                    resources: groups
+                },
+                resources: resources,
+                edit: onEdit,
+            });
+
+            console.log('viewModel.schedulerData', viewModel.schedulerData);
+        }
+
+        function onEdit(e) {
+            e.preventDefault();
+            document.getElementById("editFire").click();
+        }
+
+        function refreshData() {
+            var data = $("#scheduler").kendoScheduler.data;
+            if (data) {
+                data.refresh();
+                //data.dataSource.read();
+            }
+            
+        }
+
+        function hardRefresh() {
+            var scheduler = $("#scheduler").data("kendoScheduler");
+            if (scheduler) {
+                scheduler.destroy();
+                $("#scheduler").empty();
+            }
+        }
+    </script>
+
+    <script id="event-template" type="text/x-kendo-template">
+        <div data-is-conflicted="#: isConflict #" data-is-confirmed="#: isConfirmed #">#: title #</div>
     </script>
 
 </body>
