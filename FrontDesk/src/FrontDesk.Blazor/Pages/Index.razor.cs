@@ -178,20 +178,10 @@ namespace FrontDesk.Blazor.Pages
         {
             return new DateTime(Today.Year, Today.Month, Today.Day, date.Hour, date.Minute, date.Second);
         }
-
-        private RenderFragment renderTextBox()
-        {
-            RenderFragment item = b => {
-                b.OpenElement(0, "div");
-                b.AddAttribute(1, "class", "k-widget k-scheduler k-scheduler-flex k-floatwrap telerik-blazor");
-                b.AddMarkupContent(2, "\r\n    ");
-                b.CloseComponent();
-            };
-            return item;
-        }
         
-        private void OpenEdit()
+        private void OpenEdit(AppointmentDto appointment)
         {
+            CurrentAppointment = appointment;
             CustomEditFormShown = true;
         }
     }

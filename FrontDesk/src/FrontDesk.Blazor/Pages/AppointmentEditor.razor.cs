@@ -126,7 +126,7 @@ namespace FrontDesk.Blazor.Pages
                         PatientId = Patient.PatientId,
                         ClientId = Patient.ClientId,
                         ScheduleId = ScheduleId,
-                        RoomId = RoomId,
+                        RoomId = Appointment.RoomId,
                         AppointmentTypeId = Appointment.AppointmentTypeId,
                         DateOfAppointment = Appointment.Start,
                     };
@@ -143,7 +143,7 @@ namespace FrontDesk.Blazor.Pages
                         Title = Appointment.Title,
                         ClientId = Patient.ClientId,
                         ScheduleId = ScheduleId,
-                        RoomId = RoomId,
+                        RoomId = Appointment.RoomId,
                         AppointmentTypeId = Appointment.AppointmentTypeId,
                         Start = Appointment.Start,
                         End = Appointment.End,
